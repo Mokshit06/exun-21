@@ -1,12 +1,13 @@
 import axios from 'axios';
 
-export function createCompletion({
-  prompt,
-  maxTokens = 50,
-}: {
+type CompletionOptions = {
   prompt: string;
   maxTokens: number;
-}) {
+};
+
+export function createCompletion(options: CompletionOptions) {
+  const { prompt, maxTokens = 50 } = options;
+
   return axios.get<Completion>(
     'https://api.openai.com/v1/engines/davinci-instruct-beta-v3/completions',
     {

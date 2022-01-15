@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  // username  String?  @unique
+  email     String   @unique
+  password  String
+  tasks     Task[]
+  isAdmin   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// model Customer {
+//   id        String   @id @default(uuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  DONE
+  STUCK
+}
+
+model Task {
+  id          String       @id @default(uuid())
+  title       String
+  description String
+  priority    TaskPriority
+  status      TaskStatus
+  assignedTo  User[]
+  startedAt   DateTime     @default(now())
+  dueDate     DateTime
+  completedAt DateTime
+}
+
+model Candy {
+  id          String   @id @default(uuid())
+  name        String
+  price       Int
+  description String
+  image       String
+  ingredients Item[]
+  directions  String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Item {
+  id       String  @id @default(uuid())
+  name     String
+  quantity String
+  candy    Candy?  @relation(fields: [candyId], references: [id])
+  candyId  String?
+}
+
+model Session {
+  sid    String   @id
+  sess   Json
+  expire DateTime
+
+  @@index([expire], name: "IDX_session_expire")
+  @@map("session")
+}

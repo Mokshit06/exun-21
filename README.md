@@ -11,3 +11,6 @@
 [] Medical facility for oompla loompas.
 [] List of employees (oompa loompas) along with the trials of recipes being done on them.
 [] Ability for oompa loompas to chat with gpt3 about their schedule etc.
+[] Slack like messaging
+[] Finance reports
+[] Company productivity progress
