@@ -12,12 +12,15 @@
     "axios": "^0.24.0",
     "bcrypt": "^5.0.1",
     "connect-pg-simple": "^7.0.0",
+    "formik": "^2.2.9",
     "next": "12.0.8",
     "next-auth": "^4.1.0",
     "next-session": "^4.0.4",
     "react": "17.0.2",
     "react-dnd": "^14.0.5",
-    "react-dom": "17.0.2"
+    "react-dnd-html5-backend": "^14.1.0",
+    "react-dom": "17.0.2",
+    "react-query": "^3.34.8"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

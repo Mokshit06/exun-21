@@ -7,7 +7,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const session = await getSession(req, res);
-  const userId = session.auth?.userId as string | undefined;
+  const userId = session.auth?.user as string | undefined;
 
   if (!userId) {
     return res.json({});
