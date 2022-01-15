@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 declare global {
   // var so that its public
-  var prisma: PrismaClient;
+  var __prisma: PrismaClient;
 }
 
 let prisma: PrismaClient;
@@ -10,9 +10,9 @@ let prisma: PrismaClient;
 if (process.env.NODE_ENV === 'production') {
   prisma = new PrismaClient();
 } else {
-  if (!global.prisma) {
-    global.prisma = new PrismaClient();
+  if (!global.__prisma) {
+    global.__prisma = new PrismaClient();
   }
-  prisma = global.prisma;
+  prisma = global.__prisma;
 }
 export default prisma;

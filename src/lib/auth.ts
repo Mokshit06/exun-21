@@ -2,6 +2,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { getSession } from './session';
 import { Session } from 'next-session/lib/types';
 import { redirect } from './server-side-props';
+import prisma from './prisma';
 
 export async function getUser(
   req: IncomingMessage & {
@@ -15,7 +16,8 @@ export async function getUser(
     throw redirect('/login');
   }
 
-  return await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: { id: session.auth?.user },
   });
+  return user!;
 }

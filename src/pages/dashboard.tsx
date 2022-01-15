@@ -1,11 +1,7 @@
 import { getUser } from '@/lib/auth';
 import { wrap } from '@/lib/server-side-props';
 import { User } from '@prisma/client';
-import {
-  GetServerSidePropsContext,
-  GetServerSidePropsResult,
-  InferGetServerSidePropsType,
-} from 'next';
+import { InferGetServerSidePropsType } from 'next';
 
 export default function Dashboard(
   props: InferGetServerSidePropsType<typeof getServerSideProps>

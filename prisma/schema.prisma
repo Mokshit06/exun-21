@@ -47,10 +47,13 @@ model Task {
   description String
   priority    TaskPriority
   status      TaskStatus
+  // increment index by 100 so that other tasks can be placed between two when reordered
+  index       Int
   // for gantt charts
   dependsOn   Task[]       @relation("Dependent")
   dependedOn  Task[]       @relation("Dependent")
   assignedTo  User[]
+  // comments    Comment[]
   startedAt   DateTime     @default(now())
   dueDate     DateTime
   completedAt DateTime

@@ -32,12 +32,10 @@ export type Completion = {
   object: string;
   created: number;
   model: string;
-  choices: [
-    {
-      text: string;
-      index: number;
-      logprobs?: number;
-      finish_reason: string;
-    }
-  ];
+  choices: Array<{
+    text: string;
+    index: number;
+    logprobs?: number;
+    finish_reason: string;
+  }>;
 };
