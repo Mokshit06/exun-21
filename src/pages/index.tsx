@@ -1,3 +1,5 @@
+import Chart from '@/components/chart';
+
 export default function Home() {
-  return <div>Works</div>;
+  return <Chart />;
 }

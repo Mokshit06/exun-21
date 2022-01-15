@@ -47,6 +47,9 @@ model Task {
   description String
   priority    TaskPriority
   status      TaskStatus
+  // for gantt charts
+  dependsOn   Task[]       @relation("Dependent")
+  dependedOn  Task[]       @relation("Dependent")
   assignedTo  User[]
   startedAt   DateTime     @default(now())
   dueDate     DateTime

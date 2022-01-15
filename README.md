@@ -14,3 +14,4 @@
 [] Slack like messaging
 [] Finance reports
 [] Company productivity progress
+[] Gantt charts
