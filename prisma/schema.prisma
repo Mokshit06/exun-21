@@ -58,7 +58,7 @@ model Task {
   comments    Comment[]
   startedAt   DateTime     @default(now())
   dueDate     DateTime
-  completedAt DateTime
+  completedAt DateTime?
 }
 
 model Comment {

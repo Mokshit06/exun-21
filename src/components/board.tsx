@@ -6,51 +6,82 @@ import {
   Flex,
   Grid,
   Text,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
-import { Task, TaskStatus, User } from '@prisma/client';
+import { Task, TaskStatus, User, TaskPriority } from '@prisma/client';
 import axios from 'axios';
 import Link from 'next/link';
+import Tag from './tag';
+// import { Formik, useField } from 'formik';
 import { useMemo, useRef } from 'react';
 import { DropTargetMonitor, useDrag, useDrop } from 'react-dnd';
 import { MdChatBubble } from 'react-icons/md';
 
 const ITEM_TYPE = 'card';
 type ItemType = {
-  id: string;
+  id: '';
   status: TaskStatus;
-  ref: React.RefObject<HTMLDivElement>;
 };
 
-const TagColors: Array<[string, string]> = [
-  ['#253c56', '#2787e3'],
-  ['#1c442d', '#1d9152'],
-  ['#5b4019', '#c18435'],
-];
-let currTagIndex = 0;
-function tagColor() {
-  const tag = TagColors[currTagIndex];
-  currTagIndex = currTagIndex === TagColors.length - 1 ? 0 : currTagIndex + 1;
-  return tag;
-}
+function AddTask(props: {
+  status: TaskStatus;
+  onClose: () => void;
+  isOpen: boolean;
+}) {
+  const { isOpen, onClose, status } = props;
+  const toast = useToast();
+  const initialValues = {
+    title: '',
+    description: '',
+    priority: TaskPriority.LOW,
+    status,
+    dependsOn: [],
+    assignedTo: [],
+    dueDate: '',
+    tags: [],
+  };
+  const handleSubmit = async (values: typeof initialValues) => {
+    const { data } = await axios.post('/api/tasks', values);
 
-function Tag({ children }: { children: string }) {
-  let [bg, color] = useMemo(() => tagColor(), []);
+    onClose();
+  };
 
   return (
-    <Box px={2} py={0.5} bg={bg} w="max-content" rounded="md">
-      <Text fontSize="sm" color={color}>
-        {children}
-      </Text>
-    </Box>
+    <Modal onClose={onClose} isOpen={isOpen} isCentered>
+      <ModalOverlay />
+      <ModalContent color="theme.light" bg="theme.mediumGrey">
+        <ModalHeader>Add a task</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          {/* <Formik initialValues={initialValues} onSubmit={handleSubmit} /> */}
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            color="theme.light"
+            bg="theme.grey"
+            _hover={{ bg: 'theme.darkGrey' }}
+            _active={{ bg: 'theme.darkGrey' }}
+            onClick={onClose}
+          >
+            Close
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 }
 
 function Item(props: { task: Task & { assignedTo: User[] } }) {
   const { task } = props;
   const ref = useRef<HTMLDivElement>(null);
-  // const [_, drop] = useDrop(() => ({
-  //   accept: ITEM_TYPE,
-  // }));
   const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
     type: ITEM_TYPE,
     item: { id: task.id, status: task.status, ref },
@@ -77,11 +108,13 @@ function Item(props: { task: Task & { assignedTo: User[] } }) {
       <Text color="theme.light" fontSize="lg">
         {task.title}
       </Text>
-      <Box>
+      <Flex gridGap={2}>
         {task.tags.map(tag => (
-          <Tag key={tag}>{tag}</Tag>
+          <Tag fontSize="md" key={tag}>
+            {tag}
+          </Tag>
         ))}
-      </Box>
+      </Flex>
       <Flex align="center" justifyContent="space-between">
         <AvatarGroup max={3} size="sm">
           {task.assignedTo.map(user => (
@@ -142,6 +175,7 @@ function Card(props: {
       props.onDrop(item, monitor, status);
     },
   }));
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (
     <Box h="min-content" ref={dropRef} p={3} bg="theme.mediumGrey" rounded="md">
@@ -163,14 +197,20 @@ function Card(props: {
           <Box bg="theme.grey" rounded="md" width="100%" height="150px"></Box>
         )}
         {tasks.length === 0 && (
-          <Button
-            color="theme.light"
-            bg="theme.grey"
-            _hover={{ bg: 'theme.darkGrey' }}
-            _active={{ bg: 'theme.darkGrey' }}
-          >
-            Add a task
-          </Button>
+          <>
+            <Button
+              color="theme.light"
+              bg="theme.grey"
+              _hover={{ bg: 'theme.darkGrey' }}
+              _active={{ bg: 'theme.darkGrey' }}
+              onClick={onOpen}
+            >
+              Add a task
+            </Button>
+            {/* probably not the best performance wise to render a modal for each button */}
+            {/* might need to bring it up to <Board /> */}
+            <AddTask isOpen={isOpen} onClose={onClose} status={status} />
+          </>
         )}
       </Flex>
     </Box>

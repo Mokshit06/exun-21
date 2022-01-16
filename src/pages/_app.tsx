@@ -10,6 +10,7 @@ const theme: Partial<ChakraTheme> = {
   colors: {
     theme: {
       light: '#e4e4e4',
+      lightGrey: '#999999',
       darkGrey: '#212121',
       mediumGrey: '#383838',
       grey: '#292929',
