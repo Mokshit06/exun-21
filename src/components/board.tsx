@@ -8,8 +8,9 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { Task, TaskStatus, User } from '@prisma/client';
+import axios from 'axios';
 import Link from 'next/link';
-import { useCallback, useRef, useMemo, useEffect, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import { DropTargetMonitor, useDrag, useDrop } from 'react-dnd';
 import { MdChatBubble } from 'react-icons/md';
 
@@ -185,7 +186,8 @@ export default function Board(props: {
   ) => void;
 }) {
   const { tasks, setTasks } = props;
-  const handleDrop = (
+
+  const handleDrop = async (
     item: ItemType,
     monitor: DropTargetMonitor,
     status: TaskStatus
@@ -201,6 +203,9 @@ export default function Board(props: {
       });
 
       return newTasks;
+    });
+    await axios.put(`/api/tasks/${item.id}`, {
+      status,
     });
   };
 
