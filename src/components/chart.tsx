@@ -1,3 +1,4 @@
+import { Task, User } from '@prisma/client';
 import Head from 'next/head';
 import Script from 'next/script';
 
@@ -14,7 +15,7 @@ function createRow(
     id,
     title,
     // Math.random to generate a unique string so that each bar is of different color
-    'resource' + Math.random(),
+    // 'resource' + Math.random(),
     startAt,
     endAt,
     duration,
@@ -23,7 +24,10 @@ function createRow(
   ];
 }
 
-export default function Chart() {
+export default function Chart(props: {
+  tasks: Array<Task & { assignedTo: User[]; dependsOn: Task[] }>;
+}) {
+  const { tasks } = props;
   return (
     <>
       <Head>
@@ -47,18 +51,60 @@ export default function Chart() {
             const data = new google.visualization.DataTable();
             data.addColumn('string', 'Task ID');
             data.addColumn('string', 'Task Name');
-            data.addColumn('string', 'Resource');
+            // data.addColumn('string', 'Resource');
             data.addColumn('date', 'Start Date');
             data.addColumn('date', 'End Date');
             data.addColumn('number', 'Duration');
             data.addColumn('number', 'Percent Complete');
             data.addColumn('string', 'Dependencies');
 
+            // data.addRows(
+            //   tasks.map(task =>
+            //     createRow(
+            //       task.id,
+            //       task.title,
+            //       new Date(task.startedAt),
+            //       new Date(Date.now()),
+            //       null,
+            //       100,
+            //       task.dependsOn.map(t => t.id).join(',') || null
+            //     )
+            //   )
+            // );
+            // data.addRows([
+            //   createRow(
+            //     '1',
+            //     'First',
+            //     new Date(tasks[0].startedAt),
+            //     new Date('02-01-22'),
+            //     null,
+            //     100,
+            //     null
+            //   ),
+            //   createRow(
+            //     '2',
+            //     'Second',
+            //     new Date(tasks[1].startedAt),
+            //     new Date('02-01-22'),
+            //     null,
+            //     100,
+            //     '1,3'
+            //   ),
+            //   createRow(
+            //     '3',
+            //     'Three',
+            //     new Date(tasks[1].startedAt),
+            //     new Date('03-01-22'),
+            //     null,
+            //     100,
+            //     '1'
+            //   ),
+            // ]);
             data.addRows([
               createRow(
                 'Research',
                 'Find sources',
-                new Date(2015, 0, 1),
+                new Date(tasks[1].startedAt),
                 new Date(2015, 0, 5),
                 null,
                 100,
@@ -67,9 +113,10 @@ export default function Chart() {
               createRow(
                 'Write',
                 'Write paper',
-                null,
+                new Date(tasks[1].startedAt),
                 new Date(2015, 0, 9),
-                daysToMilliseconds(3),
+                // daysToMilliseconds(3),
+                null,
                 25,
                 'Research,Outline'
               ),

@@ -5,6 +5,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import '../styles/globals.css';
 
 const theme: Partial<ChakraTheme> = {
   colors: {
@@ -16,8 +17,16 @@ const theme: Partial<ChakraTheme> = {
       grey: '#292929',
     },
   },
-  components: {
-    Button: {},
+  fonts: {
+    heading: 'Inter',
+    body: 'Avenir',
+  },
+  styles: {
+    global: {
+      body: {
+        color: 'theme.light',
+      },
+    },
   },
 };
 const extendedTheme = extendTheme(theme);

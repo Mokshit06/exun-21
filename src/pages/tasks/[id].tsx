@@ -3,7 +3,6 @@ import { getUser } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { serialize } from '@/lib/serialize';
 import { wrap } from '@/lib/server-side-props';
-import { getSession } from '@/lib/session';
 import {
   Avatar,
   AvatarGroup,
@@ -14,27 +13,30 @@ import {
   Text,
   Textarea,
 } from '@chakra-ui/react';
-import { InferGetServerSidePropsType } from 'next';
-import { Formik, useField } from 'formik';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useRouter } from 'next/router';
 import { User } from '@prisma/client';
+import axios from 'axios';
+import { InferGetServerSidePropsType } from 'next';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import Sidebar from '@/components/sidebar';
+import { useQuery, useQueryClient } from 'react-query';
 
 function AddComment(props: { user: User }) {
   const { user } = props;
   const [text, setText] = useState('');
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleSubmit = async (e: React.FormEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (!text) return;
 
-    await axios.post(`/api/tasks/${router.query.id}/comments`, {
+    const taskId = router.query.id;
+    await axios.post(`/api/tasks/${taskId}/comments`, {
       text,
     });
     setText('');
-    router.replace(router.asPath);
+    queryClient.invalidateQueries(`${taskId}/comments`);
   };
 
   return (
@@ -44,7 +46,7 @@ function AddComment(props: { user: User }) {
         rounded="lg"
         color="theme.light"
         fontSize="md"
-        bg="theme.grey"
+        bg="theme.mediumGrey"
         outline="none"
         value={text}
         onChange={e => setText(e.target.value)}
@@ -74,17 +76,27 @@ export default function Task(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
   const { task, user } = props;
+  const { data: comments = [] } = useQuery(
+    `${task.id}/comments`,
+    () =>
+      axios
+        .get<{ data: typeof task.comments }>(`/api/tasks/${task.id}/comments`)
+        .then(r => r.data.data),
+    {
+      initialData: task.comments,
+    }
+  );
 
   return (
-    <Box bg="theme.darkGrey" minH="100vh" px={10} py={8}>
-      <Flex flexDirection="column" gridGap={10} maxW="1100px">
+    <Sidebar>
+      <Flex px={10} py={8} flexDirection="column" gridGap={10} maxW="1100px">
         <Box>
           <Heading mb={6} fontSize="5xl" color="theme.light">
             {task.title}
           </Heading>
           <Flex gridGap={2} mb={4}>
             {task.tags.map(tag => (
-              <Tag px={3} py={1} key={tag} fontSize="xl">
+              <Tag size="lg" key={tag}>
                 {tag}
               </Tag>
             ))}
@@ -115,7 +127,7 @@ export default function Task(
           <Box>
             <AddComment user={user} />
             <Flex flexDir="column" gridGap={4}>
-              {task.comments.map(comment => (
+              {comments.map(comment => (
                 <Flex
                   gridGap={4}
                   p={4}
@@ -128,7 +140,7 @@ export default function Task(
                     <Text color="theme.light" fontWeight={600}>
                       {comment.author.name}
                     </Text>
-                    <Text color="theme.light">{comment.text}</Text>
+                    <Text color="theme.lightGrey">{comment.text}</Text>
                   </Box>
                 </Flex>
               ))}
@@ -136,7 +148,7 @@ export default function Task(
           </Box>
         </Box>
       </Flex>
-    </Box>
+    </Sidebar>
   );
 }
 

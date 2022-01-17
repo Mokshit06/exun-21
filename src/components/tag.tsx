@@ -1,4 +1,4 @@
-import { Box, Text, TextProps } from '@chakra-ui/react';
+import { Tag as CTag } from '@chakra-ui/react';
 import { useMemo } from 'react';
 
 const TagColors: Array<[string, string]> = [
@@ -6,6 +6,7 @@ const TagColors: Array<[string, string]> = [
   ['#1c442d', '#1d9152'],
   ['#5b4019', '#c18435'],
 ];
+
 function* colorGenerator() {
   let currIndex = 0;
   while (true) {
@@ -15,21 +16,13 @@ function* colorGenerator() {
 }
 const tagIndex = colorGenerator();
 
-export default function Tag({
-  px = 2,
-  py = 0.5,
-  ...props
-}: TextProps & {
-  py?: number;
-  px?: number;
-}) {
+export default function Tag(props: { size: 'md' | 'lg'; children: string }) {
+  const { size, children } = props;
   let [bg, color] = useMemo(() => tagIndex.next().value!, []);
 
-  console.log({ bg, color });
-
   return (
-    <Box px={px} py={py} bg={bg} w="max-content" rounded="md">
-      <Text {...props} color={color} />
-    </Box>
+    <CTag size={size} bg={bg} color={color}>
+      {children}
+    </CTag>
   );
 }

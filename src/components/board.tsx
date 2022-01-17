@@ -15,6 +15,7 @@ import {
   ModalCloseButton,
   useDisclosure,
   useToast,
+  Tag as CTag,
 } from '@chakra-ui/react';
 import { Task, TaskStatus, User, TaskPriority } from '@prisma/client';
 import axios from 'axios';
@@ -105,12 +106,17 @@ function Item(props: { task: Task & { assignedTo: User[] } }) {
       flexDir="column"
       gap={3}
     >
-      <Text color="theme.light" fontSize="lg">
-        {task.title}
-      </Text>
+      <Box>
+        {/* <CTag size="sm" w="max-content">
+          {task.priority}
+        </CTag> */}
+        <Text color="theme.light" fontSize="lg">
+          {task.title}
+        </Text>
+      </Box>
       <Flex gridGap={2}>
         {task.tags.map(tag => (
-          <Tag fontSize="md" key={tag}>
+          <Tag size="md" key={tag}>
             {tag}
           </Tag>
         ))}
@@ -158,7 +164,7 @@ const StatusMap = {
 const STATUSES = [
   TaskStatus.OPEN,
   TaskStatus.IN_PROGRESS,
-  TaskStatus.STUCK,
+  // TaskStatus.STUCK,
   TaskStatus.DONE,
 ];
 
@@ -201,6 +207,7 @@ function Card(props: {
             <Button
               color="theme.light"
               bg="theme.grey"
+              fontWeight={500}
               _hover={{ bg: 'theme.darkGrey' }}
               _active={{ bg: 'theme.darkGrey' }}
               onClick={onOpen}
@@ -221,9 +228,14 @@ type TaskWithUser = Task & { assignedTo: User[] };
 
 export default function Board(props: {
   tasks: Array<TaskWithUser>;
-  setTasks: (
-    updater: (tasks: Array<TaskWithUser>) => Array<TaskWithUser>
-  ) => void;
+  setTasks: React.Dispatch<
+    React.SetStateAction<
+      (Task & {
+        assignedTo: User[];
+        dependsOn: Task[];
+      })[]
+    >
+  >;
 }) {
   const { tasks, setTasks } = props;
 
@@ -232,6 +244,10 @@ export default function Board(props: {
     monitor: DropTargetMonitor,
     status: TaskStatus
   ) => {
+    // syncing might cause some issues in the future
+    // it works fine for now
+    // but i might need to change it to react-query
+    // and just revalidate cache in the background
     setTasks(tasks => {
       const task = tasks.find(task => task.id === item.id);
       const newTasks = tasks.map(task => {
@@ -250,7 +266,7 @@ export default function Board(props: {
   };
 
   return (
-    <Grid templateColumns="repeat(4, 1fr)" gap={4}>
+    <Grid templateColumns={`repeat(${STATUSES.length}, 1fr)`} gap={4}>
       {[
         STATUSES.map(status => (
           <Card

@@ -1,3 +1,4 @@
+import Sidebar from '@/components/sidebar';
 import { getUser } from '@/lib/auth';
 import { serialize } from '@/lib/serialize';
 import { wrap } from '@/lib/server-side-props';
@@ -7,7 +8,11 @@ import { InferGetServerSidePropsType } from 'next';
 export default function Dashboard(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
-  return <pre>{JSON.stringify(props.user, null, 2)}</pre>;
+  return (
+    <Sidebar>
+      <pre>{JSON.stringify(props.user, null, 2)}</pre>
+    </Sidebar>
+  );
 }
 
 export const getServerSideProps = wrap(async ctx => {

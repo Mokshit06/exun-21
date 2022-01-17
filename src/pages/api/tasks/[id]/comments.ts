@@ -26,7 +26,16 @@ export default async function handler(
     return res.status(201).json({ message: 'Created comment' });
   }
 
+  if (req.method === 'GET') {
+    const comments = await prisma.comment.findMany({
+      where: { taskId: req.query.id as string },
+      include: { author: true },
+    });
+
+    return res.json({ data: comments });
+  }
+
   res.status(400).json({
-    message: 'This endpoint only accepts POST requests',
+    message: 'This endpoint only accepts POST, GET requests',
   });
 }
