@@ -15,7 +15,7 @@
 - [ ] Finance reports
 - [ ] Company productivity progress
 - [ ] Gantt charts
-
-- [ ] Todo list inside each task.
+- [ ] Video instructions to help them with machines and rooms.
+- [x] Todo list inside each task.
 
   Parse the description of the task, split at `\n`, if the line starts with `- [ ]` or `- [x]`, then replace that line with input element whose value is dependent on the `x` being there. on clicking the input, get the index of the line on which the input was clicked and replace the references of `[ ]` with `[x]`

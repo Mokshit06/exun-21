@@ -90,8 +90,8 @@ function SidebarContent({ onClose, ...props }: SidebarProps) {
       pos="fixed"
       p={4}
       h="full"
-      {...props}
       shadow="lg"
+      {...props}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Heading as="h3" fontSize="2xl" color="theme.light" fontWeight="bold">

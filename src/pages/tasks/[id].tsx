@@ -8,16 +8,17 @@ import {
   AvatarGroup,
   Box,
   Button,
+  Checkbox,
   Flex,
   Heading,
   Text,
   Textarea,
 } from '@chakra-ui/react';
-import { User } from '@prisma/client';
+import { Task, User } from '@prisma/client';
 import axios from 'axios';
 import { InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Sidebar from '@/components/sidebar';
 import { useQuery, useQueryClient } from 'react-query';
 
@@ -36,7 +37,7 @@ function AddComment(props: { user: User }) {
       text,
     });
     setText('');
-    queryClient.invalidateQueries(`${taskId}/comments`);
+    queryClient.invalidateQueries(`tasks/${taskId}`);
   };
 
   return (
@@ -72,20 +73,66 @@ function AddComment(props: { user: User }) {
   );
 }
 
-export default function Task(
+function parseDescription(taskId: string, description: string) {
+  //  Parse the description of the task, split at `\n`, if the line starts with `- [ ]` or `- [x]`, then replace that line with input element whose value is dependent on the `x` being there. on clicking the input, get the index of the line on which the input was clicked and replace the references of `[ ]` with `[x]`
+}
+
+function Description(props: { task: Task }) {
+  const { task } = props;
+  const queryClient = useQueryClient();
+
+  const description = useMemo(() => {
+    const lines = task.description.split('\n');
+
+    return lines.map((line, index) => {
+      const handleChange = async () => {
+        await axios.put(`/api/tasks/${task.id}/check`, {
+          lineIndex: index,
+        });
+        queryClient.invalidateQueries(`tasks/${task.id}`);
+      };
+
+      if (line.startsWith('- [ ] ')) {
+        return (
+          <Checkbox defaultChecked={false} onChange={handleChange}>
+            {line.replace('- [ ] ', '')}
+          </Checkbox>
+        );
+      }
+
+      if (line.startsWith('- [x] ')) {
+        return (
+          <Checkbox defaultChecked={true} onChange={handleChange}>
+            {line.replace('- [x] ', '')}
+          </Checkbox>
+        );
+      }
+
+      return line;
+    });
+  }, [task, queryClient]);
+
+  return (
+    <Text fontSize="lg" color="theme.light">
+      {description}
+    </Text>
+  );
+}
+
+export default function SingleTask(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
-  const { task, user } = props;
-  const { data: comments = [] } = useQuery(
-    `${task.id}/comments`,
+  const { user, task: initialTask } = props;
+  const task = useQuery(
+    `tasks/${initialTask.id}`,
     () =>
       axios
-        .get<{ data: typeof task.comments }>(`/api/tasks/${task.id}/comments`)
+        .get<{ data: typeof initialTask }>(`/api/tasks/${initialTask.id}`)
         .then(r => r.data.data),
     {
-      initialData: task.comments,
+      initialData: initialTask,
     }
-  );
+  ).data!;
 
   return (
     <Sidebar>
@@ -94,16 +141,14 @@ export default function Task(
           <Heading mb={6} fontSize="5xl" color="theme.light">
             {task.title}
           </Heading>
-          <Flex gridGap={2} mb={4}>
+          <Flex gridGap={2} mb={6}>
             {task.tags.map(tag => (
               <Tag size="lg" key={tag}>
                 {tag}
               </Tag>
             ))}
           </Flex>
-          <Text fontSize="lg" color="theme.light">
-            {task.description}
-          </Text>
+          <Description task={task} />
         </Box>
         <Box>
           <Heading fontSize="3xl" mb={6} fontWeight={600} color="theme.light">
@@ -127,7 +172,7 @@ export default function Task(
           <Box>
             <AddComment user={user} />
             <Flex flexDir="column" gridGap={4}>
-              {comments.map(comment => (
+              {task.comments.map(comment => (
                 <Flex
                   gridGap={4}
                   p={4}

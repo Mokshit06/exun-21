@@ -191,7 +191,8 @@ function Card(props: {
         mx={3}
         mt={1}
         mb={3}
-        fontWeight={500}
+        fontWeight={600}
+        opacity={0.9}
       >
         {StatusMap[status].title}
       </Text>

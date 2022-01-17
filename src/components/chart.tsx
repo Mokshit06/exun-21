@@ -15,7 +15,7 @@ function createRow(
     id,
     title,
     // Math.random to generate a unique string so that each bar is of different color
-    // 'resource' + Math.random(),
+    'resource' + Math.random(),
     startAt,
     endAt,
     duration,

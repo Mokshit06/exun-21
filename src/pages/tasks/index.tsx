@@ -13,7 +13,7 @@ import { useState } from 'react';
 
 type Variant = 'kanban' | 'gantt' | 'pie';
 
-const iffe = <T,>(func: () => T) => {
+const iife = <T,>(func: () => T) => {
   return func();
 };
 
@@ -34,7 +34,7 @@ export default function Tasks(
             ? 'Gantt chart'
             : 'Pie chart'}
         </Heading>
-        {iffe(() => {
+        {iife(() => {
           switch (variant) {
             case 'kanban': {
               return <Board tasks={tasks} setTasks={setTasks} />;
