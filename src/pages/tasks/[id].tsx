@@ -89,7 +89,7 @@ export default function Task(
 
   return (
     <Sidebar>
-      <Flex px={10} py={8} flexDirection="column" gridGap={10} maxW="1100px">
+      <Flex px={10} py={10} flexDirection="column" gridGap={10} maxW="1100px">
         <Box>
           <Heading mb={6} fontSize="5xl" color="theme.light">
             {task.title}

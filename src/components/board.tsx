@@ -101,8 +101,7 @@ function Item(props: { task: Task & { assignedTo: User[] } }) {
       bg="theme.darkGrey"
       rounded="md"
       shadow="md"
-      py={4}
-      px={5}
+      p={4}
       flexDir="column"
       gap={3}
     >
@@ -164,7 +163,7 @@ const StatusMap = {
 const STATUSES = [
   TaskStatus.OPEN,
   TaskStatus.IN_PROGRESS,
-  // TaskStatus.STUCK,
+  TaskStatus.STUCK,
   TaskStatus.DONE,
 ];
 
@@ -184,10 +183,11 @@ function Card(props: {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (
-    <Box h="min-content" ref={dropRef} p={3} bg="theme.mediumGrey" rounded="md">
+    <Box h="min-content" ref={dropRef} p={2} bg="theme.mediumGrey" rounded="md">
       <Text
         color="theme.light"
-        fontSize="2xl"
+        fontSize="xl"
+        fontFamily="Inter"
         mx={3}
         mt={1}
         mb={3}
@@ -273,7 +273,7 @@ export default function Board(props: {
             key={status}
             status={status}
             onDrop={handleDrop}
-            tasks={tasks.filter(task => task.status === status)}
+            tasks={tasks.filter(task => status === task.status)}
           />
         )),
       ]}

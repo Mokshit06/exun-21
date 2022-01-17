@@ -26,7 +26,7 @@ export default function Tasks(
 
   return (
     <Sidebar>
-      <Box px={10} py={8}>
+      <Box px={10} py={10}>
         <Heading color="theme.light" fontWeight={700} mb={8}>
           {variant === 'kanban'
             ? 'Kanban'
