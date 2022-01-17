@@ -3,7 +3,7 @@
 ## Todo
 
 - [ ] Product tracking throught multiple rooms
-- [ ] TRELLO like task management kind of thing
+- [x] TRELLO like task management kind of thing
 - [ ] How many Oompa Loompas are present in which room / track them.
 - [ ] Calling Oompa Loompas to a specific room / alerts
 - [ ] JIRA kind of issue tracking
