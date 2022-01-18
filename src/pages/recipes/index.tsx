@@ -88,9 +88,10 @@ export default function Recipe(
                 <Text
                   mt={3}
                   fontSize="lg"
-                  color="theme.light"
+                  fontFamily="Avenir"
+                  color="#afafaf"
                   opacity={0.8}
-                  fontWeight={300}
+                  fontWeight={400}
                 >
                   {recipe.description.slice(0, 180)}...
                 </Text>

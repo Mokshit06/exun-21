@@ -57,7 +57,13 @@ export default function SingleRecipe(
                 >
                   Description
                 </Text>
-                <Divider h={1} />
+                <Divider
+                  borderColor="#c18435"
+                  borderWidth="1px"
+                  bg="#c18435"
+                  mb={3}
+                  h={0.1}
+                />
               </Box>
               <Text color="theme.lightGrey" fontSize="md" lineHeight={1.6}>
                 {newLineToBr(recipe.description)}
@@ -73,7 +79,13 @@ export default function SingleRecipe(
                 >
                   Ingredients
                 </Text>
-                <Divider h={1} />
+                <Divider
+                  borderColor="#c18435"
+                  borderWidth="1px"
+                  bg="#c18435"
+                  mb={3}
+                  h={0.1}
+                />
               </Box>
               <Text color="theme.lightGrey" fontSize="md" lineHeight={1.6}>
                 {newLineToBr(recipe.ingredients)}
@@ -89,7 +101,13 @@ export default function SingleRecipe(
                 >
                   Instructions
                 </Text>
-                <Divider h={1} />
+                <Divider
+                  borderColor="#c18435"
+                  borderWidth="1px"
+                  bg="#c18435"
+                  mb={3}
+                  h={0.1}
+                />
               </Box>
               <Text color="theme.lightGrey" fontSize="md" lineHeight={1.6}>
                 {newLineToBr(recipe.directions)}

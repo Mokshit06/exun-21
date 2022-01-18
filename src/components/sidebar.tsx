@@ -11,7 +11,12 @@ import {
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
-import { MdWindow } from 'react-icons/md';
+import {
+  MdGroup,
+  MdMenuBook,
+  MdWindow,
+  MdSlowMotionVideo,
+} from 'react-icons/md';
 
 const Icons = {
   DASHBOARD: (
@@ -29,6 +34,9 @@ const Icons = {
     </svg>
   ),
   KANBAN: <MdWindow size="28px" fontWeight={700} />,
+  USER: <MdGroup size="28px" fontWeight={700} />,
+  RECIPES: <MdMenuBook size="28px" fontWeight={700} />,
+  TUTORIAL: <MdSlowMotionVideo size="28px" fontWeight={700} />,
 };
 
 const LinkItems = [
@@ -43,9 +51,19 @@ const LinkItems = [
     href: '/dashboard',
   },
   {
+    name: 'Employees',
+    href: '/users',
+    icon: Icons.USER,
+  },
+  {
     name: 'Recipes',
-    icon: Icons.KANBAN,
+    icon: Icons.RECIPES,
     href: '/recipes',
+  },
+  {
+    name: 'Tutorials',
+    href: '/tutorials',
+    icon: Icons.TUTORIAL,
   },
   {
     name: 'Kanban',
@@ -117,7 +135,7 @@ function SidebarContent({ onClose, ...props }: SidebarProps) {
 
 function NavItem(props: FlexProps & typeof LinkItems[number]) {
   const router = useRouter();
-  const isActive = router.asPath === props.href;
+  const isActive = router.asPath.startsWith(props.href);
 
   return (
     <NextLink href={props.href} passHref>

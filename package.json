@@ -3,8 +3,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "// dev": "node -r esbuild-register server.ts",
     "build": "next build",
     "start": "next start",
+    "// start": "NODE_ENV=production node -r esbuild-register server.ts",
     "lint": "next lint"
   },
   "dependencies": {
