@@ -16,27 +16,30 @@ export default function SingleTutorial(
         {/* <Heading color="theme.light" fontWeight={700} mb={8}>
           {tutorial.title}
         </Heading> */}
-        <Flex gridGap={6}>
+        <Box>
+          <Flex justifyContent="center" mb={8}>
+            <Box
+              w="full"
+              controls
+              as="video"
+              poster={
+                tutorial.videoURL.slice(0, tutorial.videoURL.lastIndexOf('.')) +
+                '.jpg'
+              }
+              src={tutorial.videoURL}
+              maxH="60vh"
+            />
+          </Flex>
           <Box>
-            <Flex justifyContent="center">
-              <Box as="video" src={tutorial.videoURL} maxH="50vh" />
-            </Flex>
-            <Box>
-              <Heading
-                color="theme.light"
-                fontSize="3xl"
-                fontWeight={700}
-                mb={2}
-              >
-                {tutorial.title}
-              </Heading>
-              <Divider />
-              <Text fontSize="md" mt={2}>
-                {tutorial.description}
-              </Text>
-            </Box>
+            <Heading color="theme.light" fontSize="3xl" fontWeight={700} mb={3}>
+              {tutorial.title}
+            </Heading>
+            <Divider borderColor="theme.lightGrey" />
+            <Text fontSize="lg" mt={4}>
+              {tutorial.description}
+            </Text>
           </Box>
-        </Flex>
+        </Box>
       </Box>
     </Sidebar>
   );

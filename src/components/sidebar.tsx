@@ -12,11 +12,11 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
 import {
+  MdBarChart,
   MdGroup,
   MdMenuBook,
-  MdWindow,
   MdSlowMotionVideo,
-  MdBarChart,
+  MdWindow,
 } from 'react-icons/md';
 
 const Icons = {
@@ -42,11 +42,6 @@ const Icons = {
 };
 
 const LinkItems = [
-  // { name: 'Home', icon: FiHome },
-  // { name: 'Trending', icon: FiTrendingUp },
-  // { name: 'Explore', icon: FiCompass },
-  // { name: 'Favourites', icon: FiStar },
-  // { name: 'Settings', icon: FiSettings },
   {
     name: 'Dashboard',
     icon: Icons.DASHBOARD,
@@ -125,7 +120,7 @@ function SidebarContent({ onClose, ...props }: SidebarProps) {
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Heading as="h3" fontSize="2xl" color="theme.light" fontWeight="bold">
-          Logo
+          Oompas
         </Heading>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>

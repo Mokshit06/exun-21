@@ -18,7 +18,7 @@ export default function AllTutorials(
         <Heading color="theme.light" fontWeight={700} mb={8}>
           Tutorials
         </Heading>
-        <Grid templateColumns="repeat(3, 1fr)">
+        <Grid gridGap={4} templateColumns="repeat(3, 1fr)">
           {tutorials.map(tutorial => {
             const { videoURL } = tutorial;
             const imageURL =
@@ -33,11 +33,11 @@ export default function AllTutorials(
                 <Box as="a" shadow="md" bg="theme.grey" p={2} rounded="md">
                   <Image
                     src={imageURL}
-                    h="180px"
+                    w="full"
                     alt={tutorial.title}
                     rounded="md"
                   />
-                  <Flex flexDir="column" gridGap={2}>
+                  <Flex flexDir="column" gridGap={2} p={3}>
                     <Text color="theme.light" fontWeight={500} fontSize="xl">
                       {tutorial.title}
                     </Text>
