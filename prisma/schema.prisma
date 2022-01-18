@@ -120,3 +120,20 @@ model Session {
   @@index([expire], name: "IDX_session_expire")
   @@map("session")
 }
+
+model Tutorial {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  videoURL    String
+  tags        String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Alert {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+}

@@ -23,11 +23,15 @@ import {
   ModalFooter,
   Textarea,
   Flex,
+  Image,
+  Text,
 } from '@chakra-ui/react';
 import { Form, Formik, useField } from 'formik';
 import { InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import Link from 'next/link';
+import { serialize } from '@/lib/serialize';
 
 export default function Recipe(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -38,11 +42,12 @@ export default function Recipe(
   return (
     <Sidebar>
       <Box px={10} py={10}>
-        <Flex align="center" justify="space-between">
-          <Heading color="theme.light" fontWeight={700} mb={8}>
+        <Flex align="center" justify="space-between" mb={8}>
+          <Heading color="theme.light" fontWeight={700}>
             Recipes
           </Heading>
           <Button
+            size="lg"
             color="theme.light"
             bg="theme.grey"
             fontWeight={400}
@@ -53,9 +58,44 @@ export default function Recipe(
             New Recipe
           </Button>
         </Flex>
-        <Grid>
+        <Grid gridGap={5} templateColumns="repeat(2, 1fr)">
           {recipes.map(recipe => (
-            <GridItem key={recipe.id}>{recipe.name}</GridItem>
+            <GridItem
+              key={recipe.id}
+              bg="theme.mediumGrey"
+              rounded="md"
+              shadow="sm"
+              p={3}
+              d="flex"
+              alignItems="center"
+              h="min-content"
+              gridGap={3}
+            >
+              <Image
+                src={recipe.image}
+                w="12rem"
+                h="12rem"
+                objectFit="cover"
+                objectPosition="center"
+                rounded="md"
+              />
+              <Box px={2}>
+                <Link href={`/recipes/${recipe.id}`} passHref>
+                  <Text color="white" as="a" fontSize="2xl" fontWeight={500}>
+                    {recipe.name}
+                  </Text>
+                </Link>
+                <Text
+                  mt={3}
+                  fontSize="lg"
+                  color="theme.light"
+                  opacity={0.8}
+                  fontWeight={300}
+                >
+                  {recipe.description.slice(0, 180)}...
+                </Text>
+              </Box>
+            </GridItem>
           ))}
         </Grid>
       </Box>
@@ -64,14 +104,9 @@ export default function Recipe(
 }
 
 export const getServerSideProps = wrap(async ctx => {
-  const recipes = await prisma.candy.findMany({
-    include: {
-      ingredients: true,
-      CandyTrial: true,
-    },
-  });
+  const recipes = await prisma.candy.findMany({});
 
   return {
-    props: { recipes },
+    props: { recipes: serialize(recipes) },
   };
 });

@@ -23,7 +23,6 @@ function CreateRecipeForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [nameInput, , nameHelpers] = useField('name');
   const [descriptionInput, , descriptionHelpers] = useField('description');
-  const [imageURLInput, , imageURLHelpers] = useField('imageURL');
   const [priceInput, , priceHelpers] = useField('price');
   const [directionsInput, , directionsHelpers] = useField('directions');
   const [ingredientsInput, , ingredientsHelpers] = useField('ingredients');
@@ -73,6 +72,7 @@ function CreateRecipeForm() {
           outline="none"
           py={3}
           rows={4}
+          lineHeight={1.6}
           border="none"
           {...descriptionInput}
         />
@@ -89,7 +89,7 @@ function CreateRecipeForm() {
           py={3}
           border="none"
           outline="none"
-          rows={6}
+          rows={5}
           {...ingredientsInput}
         />
       </FormControl>
@@ -105,7 +105,7 @@ function CreateRecipeForm() {
           py={3}
           border="none"
           outline="none"
-          rows={6}
+          rows={5}
           {...directionsInput}
         />
       </FormControl>
@@ -122,10 +122,10 @@ function CreateRecipeForm() {
             ₹
           </InputLeftElement>
           <Input
+            py={3}
             rounded="lg"
             fontSize="md"
             bg="theme.mediumGrey"
-            py={3}
             border="none"
             type="number"
             min={1}
@@ -135,25 +135,25 @@ function CreateRecipeForm() {
       </FormControl>
       <Flex marginLeft="auto" gridGap={4}>
         <Button
-          color="theme.light"
-          bg="theme.grey"
           fontWeight={400}
-          _hover={{ bg: 'theme.mediumGrey' }}
-          _active={{ bg: 'theme.mediumGrey' }}
           type="button"
           size="lg"
           onClick={handleSuggest}
           isLoading={isLoading}
+          bg="#5b4019"
+          color="#c18435"
+          _hover={{ bg: '#5b4019' }}
+          _active={{ bg: '#5b4019' }}
         >
           Suggest
         </Button>
         <Button
-          color="theme.light"
-          bg="theme.grey"
           size="lg"
           fontWeight={400}
-          _hover={{ bg: 'theme.mediumGrey' }}
-          _active={{ bg: 'theme.mediumGrey' }}
+          bg="#253c56"
+          color="#2787e3"
+          _hover={{ bg: '#293e57' }}
+          _active={{ bg: '#293e57' }}
           type="submit"
         >
           Add Recipe
@@ -175,13 +175,11 @@ export default function NewRecipe() {
     router.push('/recipes');
   };
   const initialValues = {
-    name: 'Blueberry chocolate',
-    imageURL: '',
+    name: 'Raspberry chocolate',
     description: '',
     ingredients: '',
     directions: '',
     price: 10,
-    image: '100',
   };
 
   return (
