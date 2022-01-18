@@ -3,28 +3,39 @@ import {
   AvatarGroup,
   Box,
   Button,
+  css,
+  CSSObject,
+  Editable,
+  EditableInput,
+  EditablePreview,
   Flex,
+  FormControl,
+  FormLabel,
   Grid,
-  Text,
+  Input,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
-  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
+  Text,
+  Textarea,
   useDisclosure,
   useToast,
-  Tag as CTag,
+  ModalCloseButton,
+  ModalHeader,
 } from '@chakra-ui/react';
-import { Task, TaskStatus, User, TaskPriority } from '@prisma/client';
+import { useRouter } from 'next/router';
+import { Task, TaskPriority, TaskStatus, User } from '@prisma/client';
 import axios from 'axios';
 import Link from 'next/link';
-import Tag from './tag';
-// import { Formik, useField } from 'formik';
-import { useMemo, useRef } from 'react';
+import Select from 'react-select';
+import { Formik, useField, Form } from 'formik';
+import { useQuery } from 'react-query';
+import { useRef } from 'react';
 import { DropTargetMonitor, useDrag, useDrop } from 'react-dnd';
 import { MdChatBubble } from 'react-icons/md';
+import Tag from './tag';
 
 const ITEM_TYPE = 'card';
 type ItemType = {
@@ -36,47 +47,200 @@ function AddTask(props: {
   status: TaskStatus;
   onClose: () => void;
   isOpen: boolean;
+  tasks: Task[];
 }) {
-  const { isOpen, onClose, status } = props;
+  const { isOpen, onClose, status, tasks } = props;
+  const router = useRouter();
   const toast = useToast();
   const initialValues = {
-    title: '',
+    title: 'Untitled Task',
     description: '',
     priority: TaskPriority.LOW,
-    status,
+    status: TaskStatus.OPEN,
     dependsOn: [],
     assignedTo: [],
-    dueDate: '',
-    tags: [],
+    tags: '',
+    duration: 1,
   };
   const handleSubmit = async (values: typeof initialValues) => {
-    const { data } = await axios.post('/api/tasks', values);
-
+    const { data } = await axios.post('/api/tasks', {
+      ...values,
+      tags: values.tags
+        .split(',')
+        .map(t => t.trim())
+        .filter(x => x !== ''),
+    });
     onClose();
+    router.replace(router.asPath);
   };
 
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
-      <ModalOverlay />
-      <ModalContent color="theme.light" bg="theme.mediumGrey">
-        <ModalHeader>Add a task</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          {/* <Formik initialValues={initialValues} onSubmit={handleSubmit} /> */}
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            color="theme.light"
-            bg="theme.grey"
-            _hover={{ bg: 'theme.darkGrey' }}
-            _active={{ bg: 'theme.darkGrey' }}
-            onClick={onClose}
-          >
-            Close
-          </Button>
-        </ModalFooter>
+      <ModalOverlay backdropFilter="blur(1px)" />
+      <ModalContent color="theme.light" bg="theme.grey">
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          <AddTaskForm tasks={tasks} onClose={onClose} />
+        </Formik>
       </ModalContent>
     </Modal>
+  );
+}
+
+function AddTaskForm(props: { tasks: Task[]; onClose(): void }) {
+  const { onClose, tasks } = props;
+  const { data: users = [] } = useQuery('users', () =>
+    axios.get<{ data: User[] }>('/api/users').then(res => res.data.data)
+  );
+  const [titleInput, , titleHelpers] = useField('title');
+  const [descriptionInput] = useField('description');
+  const [tagsInput] = useField('tags');
+  const [, , assignedToHelpers] = useField('assignedTo');
+  const [, , dependsOnHelpers] = useField('dependsOn');
+  const [durationInput] = useField('duration');
+
+  const styles: CSSObject = {
+    '.r-s__control': {
+      bg: 'theme.mediumGrey',
+      borderWidth: 0,
+      rounded: 'lg',
+    },
+    '.r-s__input-container': {
+      color: 'theme.light',
+      fontWeight: 300,
+    },
+    '.r-s__multi-value__label': {
+      color: '#58a0e4',
+    },
+    '.r-s__multi-value': {
+      bg: '#2b486b',
+      rounded: 'md',
+    },
+    '.r-s__multi-value__remove': {
+      '&:hover': {
+        color: 'white',
+        bg: '#2b486b',
+      },
+    },
+    '.r-s__menu': {
+      bg: 'theme.mediumGrey',
+    },
+    '.r-s__option--is-focused': {
+      bg: 'theme.grey',
+    },
+  };
+
+  return (
+    <Form>
+      <ModalCloseButton />
+      <ModalBody mt={5} gridGap={4} d="flex" flexDir="column">
+        <Editable
+          fontSize="xl"
+          fontWeight={500}
+          fontFamily="Inter"
+          defaultValue="Untitled Task"
+          value={titleInput.value}
+          onChange={value => titleHelpers.setValue(value)}
+        >
+          <EditablePreview />
+          <EditableInput />
+        </Editable>
+        <FormControl>
+          <FormLabel>Description</FormLabel>
+          <Textarea
+            rounded="lg"
+            color="theme.light"
+            fontSize="md"
+            bg="theme.mediumGrey"
+            outline="none"
+            py={3}
+            border="none"
+            {...descriptionInput}
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel>Tags</FormLabel>
+          <Input
+            rounded="lg"
+            color="theme.light"
+            fontSize="md"
+            bg="theme.mediumGrey"
+            py={3}
+            border="none"
+            {...tagsInput}
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel>Duration (Days)</FormLabel>
+          <Input
+            rounded="lg"
+            color="theme.light"
+            fontSize="md"
+            bg="theme.mediumGrey"
+            py={3}
+            border="none"
+            type="number"
+            min={1}
+            max={30}
+            {...durationInput}
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel>Assigned to</FormLabel>
+          <Box
+            as={Select}
+            className="r-s-container"
+            classNamePrefix="r-s"
+            rounded="md"
+            bg="theme.mediumGrey"
+            sx={styles}
+            isMulti
+            options={users.map(user => ({
+              value: user.id,
+              label: user.name,
+            }))}
+            onChange={
+              ((value: { value: string }[]) => {
+                assignedToHelpers.setValue(value.map(v => v.value));
+              }) as any
+            }
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel>Depends on</FormLabel>
+          <Box
+            as={Select}
+            className="r-s-container"
+            classNamePrefix="r-s"
+            rounded="md"
+            bg="theme.mediumGrey"
+            sx={styles}
+            isMulti
+            options={tasks.map(task => ({
+              value: task.id,
+              label: task.title,
+            }))}
+            onChange={
+              ((value: { value: string }[]) => {
+                dependsOnHelpers.setValue(value.map(v => v.value));
+              }) as any
+            }
+          />
+        </FormControl>
+        {/* <Formik initialValues={initialValues} onSubmit={handleSubmit} /> */}
+      </ModalBody>
+      <ModalFooter>
+        <Button
+          color="theme.light"
+          bg="theme.darkGrey"
+          fontWeight={400}
+          _hover={{ bg: 'theme.darkGrey' }}
+          _active={{ bg: 'theme.darkGrey' }}
+          type="submit"
+        >
+          Add Task
+        </Button>
+      </ModalFooter>
+    </Form>
   );
 }
 
@@ -169,10 +333,11 @@ const STATUSES = [
 
 function Card(props: {
   status: TaskStatus;
-  tasks: TaskWithUser[];
+  allTasks: TaskWithUser[];
   onDrop(item: ItemType, minitor: DropTargetMonitor, status: TaskStatus): void;
 }) {
-  const { status, tasks } = props;
+  const { status, allTasks } = props;
+  const tasks = allTasks.filter(task => status === task.status);
   const [{ isOver }, dropRef] = useDrop(() => ({
     accept: ITEM_TYPE,
     collect: monitor => ({ isOver: monitor.isOver() }),
@@ -217,7 +382,12 @@ function Card(props: {
             </Button>
             {/* probably not the best performance wise to render a modal for each button */}
             {/* might need to bring it up to <Board /> */}
-            <AddTask isOpen={isOpen} onClose={onClose} status={status} />
+            <AddTask
+              isOpen={isOpen}
+              onClose={onClose}
+              status={status}
+              tasks={allTasks}
+            />
           </>
         )}
       </Flex>
@@ -274,7 +444,7 @@ export default function Board(props: {
             key={status}
             status={status}
             onDrop={handleDrop}
-            tasks={tasks.filter(task => status === task.status)}
+            allTasks={tasks}
           />
         )),
       ]}

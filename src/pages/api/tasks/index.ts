@@ -15,7 +15,8 @@ export default async function handler(
       tags: string[];
       dependsOn: string[];
       assignedTo: string[];
-      dueDate: string;
+      dueDate?: string;
+      duration?: number;
     };
 
     const task = await prisma.task.create({
@@ -27,6 +28,7 @@ export default async function handler(
         dependsOn: { connect: data.dependsOn.map(id => ({ id })) },
         assignedTo: { connect: data.assignedTo.map(id => ({ id })) },
         dueDate: data.dueDate,
+        duration: data.duration,
         index: 0,
         tags: data.tags,
       },

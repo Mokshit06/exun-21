@@ -27,6 +27,7 @@ const theme: Partial<ChakraTheme> = {
   styles: {
     global: {
       body: {
+        colorScheme: 'dark',
         color: 'theme.light',
       },
     },

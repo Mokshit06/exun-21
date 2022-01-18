@@ -1,3 +1,4 @@
+import Sidebar from '@/components/sidebar';
 import Tag from '@/components/tag';
 import { getUser } from '@/lib/auth';
 import prisma from '@/lib/prisma';
@@ -18,8 +19,7 @@ import { Task, User } from '@prisma/client';
 import axios from 'axios';
 import { InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { useMemo, useState } from 'react';
-import Sidebar from '@/components/sidebar';
+import { useMemo, useState,Fragment } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 function AddComment(props: { user: User }) {
@@ -91,29 +91,39 @@ function Description(props: { task: Task }) {
         });
         queryClient.invalidateQueries(`tasks/${task.id}`);
       };
+      let element = <>{line}</>;
 
       if (line.startsWith('- [ ] ')) {
-        return (
-          <Checkbox defaultChecked={false} onChange={handleChange}>
-            {line.replace('- [ ] ', '')}
-          </Checkbox>
+        element = (
+          <>
+            <Checkbox size="lg" defaultChecked={false} onChange={handleChange}>
+              {line.replace('- [ ] ', '')}
+            </Checkbox>
+          </>
         );
       }
 
       if (line.startsWith('- [x] ')) {
-        return (
-          <Checkbox defaultChecked={true} onChange={handleChange}>
-            {line.replace('- [x] ', '')}
-          </Checkbox>
+        element = (
+          <>
+            <Checkbox size="lg" defaultChecked={true} onChange={handleChange}>
+              {line.replace('- [x] ', '')}
+            </Checkbox>
+          </>
         );
       }
 
-      return line;
+      return (
+        <Fragment key={index}>
+          {element}
+          <br />
+        </Fragment>
+      )
     });
   }, [task, queryClient]);
 
   return (
-    <Text fontSize="lg" color="theme.light">
+    <Text lineHeight={1.6} fontSize="lg" color="theme.light">
       {description}
     </Text>
   );

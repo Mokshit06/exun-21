@@ -9,7 +9,7 @@ import { Box, Heading } from '@chakra-ui/react';
 import { Task, User } from '@prisma/client';
 import { InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Variant = 'kanban' | 'gantt' | 'pie';
 
@@ -23,6 +23,10 @@ export default function Tasks(
   const [tasks, setTasks] = useState(props.tasks);
   const router = useRouter();
   const variant = (router.query.type as Variant | undefined) || 'kanban';
+
+  useEffect(() => {
+    setTasks(props.tasks);
+  }, [props]);
 
   return (
     <Sidebar>
