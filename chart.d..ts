@@ -6,7 +6,7 @@ declare global {
         title: string,
         resource: string,
         startAt: Date | null,
-        endAt: Date,
+        endAt: Date | null,
         duration: number | null,
         percentDone: number,
         dependsOn: string | null

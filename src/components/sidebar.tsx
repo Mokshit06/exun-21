@@ -16,6 +16,7 @@ import {
   MdMenuBook,
   MdWindow,
   MdSlowMotionVideo,
+  MdBarChart,
 } from 'react-icons/md';
 
 const Icons = {
@@ -37,6 +38,7 @@ const Icons = {
   USER: <MdGroup size="28px" fontWeight={700} />,
   RECIPES: <MdMenuBook size="28px" fontWeight={700} />,
   TUTORIAL: <MdSlowMotionVideo size="28px" fontWeight={700} />,
+  GANTT: <MdBarChart size="28px" fontWeight={700} />,
 };
 
 const LinkItems = [
@@ -69,6 +71,11 @@ const LinkItems = [
     name: 'Kanban',
     icon: Icons.KANBAN,
     href: '/tasks',
+  },
+  {
+    name: 'Gantt',
+    icon: Icons.GANTT,
+    href: '/tasks?type=gantt',
   },
 ];
 
@@ -135,7 +142,10 @@ function SidebarContent({ onClose, ...props }: SidebarProps) {
 
 function NavItem(props: FlexProps & typeof LinkItems[number]) {
   const router = useRouter();
-  const isActive = router.asPath.startsWith(props.href);
+  const isActive =
+    props.href === '/tasks'
+      ? router.asPath === props.href
+      : router.asPath.startsWith(props.href);
 
   return (
     <NextLink href={props.href} passHref>
