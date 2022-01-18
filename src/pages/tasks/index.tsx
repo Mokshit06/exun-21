@@ -24,6 +24,7 @@ export default function Tasks(
   const router = useRouter();
   const variant = (router.query.type as Variant | undefined) || 'kanban';
 
+  // TODO: This is a hack to get the tasks to update when props get revalidated with `router.replace(router.asPath)`
   useEffect(() => {
     setTasks(props.tasks);
   }, [props]);

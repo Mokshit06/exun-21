@@ -97,19 +97,19 @@ model Candy {
   price       Int
   description String
   image       String
-  ingredients Item[]
-  directions  String[]
+  ingredients String
+  directions  String
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   CandyTrial  CandyTrial[]
 }
 
 model Item {
-  id       String  @id @default(uuid())
+  id       String @id @default(uuid())
   name     String
   quantity String
-  candy    Candy?  @relation(fields: [candyId], references: [id])
-  candyId  String?
+  // candy    Candy?  @relation(fields: [candyId], references: [id])
+  // candyId  String?
 }
 
 model Session {

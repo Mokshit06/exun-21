@@ -76,7 +76,7 @@ function AddTask(props: {
 
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
-      <ModalOverlay backdropFilter="blur(1px)" />
+      <ModalOverlay />
       <ModalContent color="theme.light" bg="theme.grey">
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           <AddTaskForm tasks={tasks} onClose={onClose} />
@@ -327,7 +327,7 @@ const StatusMap = {
 const STATUSES = [
   TaskStatus.OPEN,
   TaskStatus.IN_PROGRESS,
-  TaskStatus.STUCK,
+  // TaskStatus.STUCK,
   TaskStatus.DONE,
 ];
 
@@ -348,7 +348,14 @@ function Card(props: {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (
-    <Box h="min-content" ref={dropRef} p={2} bg="theme.mediumGrey" rounded="md">
+    <Box
+      h="min-content"
+      ref={dropRef}
+      p={2}
+      bg="theme.mediumGrey"
+      rounded="md"
+      shadow="lg"
+    >
       <Text
         color="theme.light"
         fontSize="xl"
@@ -361,7 +368,7 @@ function Card(props: {
       >
         {StatusMap[status].title}
       </Text>
-      <Flex flexDir="column" gridGap={3}>
+      <Flex flexDir="column" gridGap={2}>
         {tasks.map(task => (
           <Item key={task.id} task={task} />
         ))}
@@ -437,7 +444,7 @@ export default function Board(props: {
   };
 
   return (
-    <Grid templateColumns={`repeat(${STATUSES.length}, 1fr)`} gap={4}>
+    <Grid templateColumns={`repeat(${STATUSES.length}, 1fr)`} gap={3}>
       {[
         STATUSES.map(status => (
           <Card

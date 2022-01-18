@@ -43,6 +43,11 @@ const LinkItems = [
     href: '/dashboard',
   },
   {
+    name: 'Recipes',
+    icon: Icons.KANBAN,
+    href: '/recipes',
+  },
+  {
     name: 'Kanban',
     icon: Icons.KANBAN,
     href: '/tasks',
