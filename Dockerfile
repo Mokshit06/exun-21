@@ -12,8 +12,8 @@ RUN yarn install
 COPY . .
 
 ARG DATABASE_URL
-RUN echo ${DATABASE_URL}
 ENV DATABASE_URL ${DATABASE_URL}
+RUN echo ${DATABASE_URL}
 RUN yarn prisma migrate deploy
 RUN yarn prisma generate
 
