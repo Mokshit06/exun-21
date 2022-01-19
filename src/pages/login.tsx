@@ -32,7 +32,7 @@ export default function Login() {
       containerStyle: { color: 'black' },
     });
 
-    router.push('/dashboard');
+    router.push('/tasks');
   };
 
   return (

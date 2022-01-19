@@ -42,11 +42,11 @@ const Icons = {
 };
 
 const LinkItems = [
-  {
-    name: 'Dashboard',
-    icon: Icons.DASHBOARD,
-    href: '/dashboard',
-  },
+  // {
+  //   name: 'Dashboard',
+  //   icon: Icons.DASHBOARD,
+  //   href: '/dashboard',
+  // },
   {
     name: 'Employees',
     href: '/users',

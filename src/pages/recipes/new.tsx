@@ -171,6 +171,7 @@ export default function NewRecipe() {
     toast({
       title: `Created ${values.name}`,
       status: 'success',
+      containerStyle: { color: '#0a0a0a' },
     });
     router.push('/recipes');
   };
