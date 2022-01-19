@@ -17,7 +17,7 @@ export default function Users(
         <Heading color="theme.light" fontWeight={700} mb={8}>
           Employees
         </Heading>
-        <Grid templateColumns="repeat(3, 1fr)">
+        <Grid gridGap={3} templateColumns="repeat(3, 1fr)">
           {users.map(user => (
             <Link key={user.id} href={`/users/${user.id}`} passHref>
               <Flex
@@ -47,7 +47,7 @@ export default function Users(
 
 export const getServerSideProps = wrap(async ctx => {
   const users = await prisma.user.findMany({
-    where: { isAdmin: false },
+    // where: { isAdmin: false },
   });
 
   return {

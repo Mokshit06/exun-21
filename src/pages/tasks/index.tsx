@@ -57,11 +57,13 @@ export default function Tasks(
 export const getServerSideProps = wrap(async ctx => {
   const user = await getUser(ctx.req, ctx.res);
   const tasks = await prisma.task.findMany({
-    where: {
-      assignedTo: {
-        some: { id: user.id },
-      },
-    },
+    where: user.isAdmin
+      ? {}
+      : {
+          assignedTo: {
+            some: { id: user.id },
+          },
+        },
     include: {
       assignedTo: true,
       dependsOn: true,

@@ -46,7 +46,7 @@ export default function SingleRecipe(
           objectPosition="center"
         /> */}
         <Flex justifyContent="space-between" gridGap={8}>
-          <Flex flexDir="column" gridGap={4}>
+          <Flex flexDir="column" gridGap={4} w="full">
             <Box bg="theme.grey" py={4} px={5} rounded="md">
               <Box mb={2} maxW="min-content">
                 <Text

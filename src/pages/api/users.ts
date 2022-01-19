@@ -6,7 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const users = await prisma.user.findMany({
-    where: { isAdmin: false },
+    // where: { isAdmin: false },
   });
 
   res.json({ data: users });
