@@ -19,7 +19,8 @@ export default function Login() {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget!);
-    await axios.post('/api/auth/login', {
+    await axios.post('/api/auth/register', {
+      name: formData.get('name'),
       email: formData.get('email'),
       password: formData.get('password'),
     });
