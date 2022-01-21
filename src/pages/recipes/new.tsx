@@ -1,4 +1,6 @@
 import Sidebar from '@/components/sidebar';
+import { getUser } from '@/lib/auth';
+import { wrap } from '@/lib/server-side-props';
 import {
   Box,
   Button,
@@ -155,6 +157,7 @@ function CreateRecipeForm() {
           _hover={{ bg: '#293e57' }}
           _active={{ bg: '#293e57' }}
           type="submit"
+          disabled={true}
         >
           Add Recipe
         </Button>
@@ -195,3 +198,11 @@ export default function NewRecipe() {
     </Sidebar>
   );
 }
+
+export const getServerSideProps = wrap(async ctx => {
+  const user = await getUser(ctx.req, ctx.res);
+
+  return {
+    props: { user },
+  };
+});

@@ -74,6 +74,7 @@ export default function Login() {
               h={12}
               name="name"
               fontSize="lg"
+              required
               px={6}
               _focus={{ border: 'none' }}
             />
@@ -88,6 +89,7 @@ export default function Login() {
               type="email"
               h={12}
               name="email"
+              required
               fontSize="lg"
               defaultValue={router.query.email || ''}
               px={6}
@@ -102,6 +104,7 @@ export default function Login() {
               border="none"
               h={12}
               name="password"
+              required
               type="password"
               rounded="md"
               fontSize="lg"

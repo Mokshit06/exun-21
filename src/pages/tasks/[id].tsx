@@ -19,7 +19,7 @@ import { Task, User } from '@prisma/client';
 import axios from 'axios';
 import { InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { useMemo, useState,Fragment } from 'react';
+import { useMemo, useState, Fragment } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 function AddComment(props: { user: User }) {
@@ -118,7 +118,7 @@ function Description(props: { task: Task }) {
           {element}
           <br />
         </Fragment>
-      )
+      );
     });
   }, [task, queryClient]);
 
