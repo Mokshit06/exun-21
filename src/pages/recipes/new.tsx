@@ -18,10 +18,11 @@ import {
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { Form, Formik, useField } from 'formik';
+import { InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-function CreateRecipeForm() {
+function CreateRecipeForm({ isDisabled }: { isDisabled: boolean }) {
   const [isLoading, setIsLoading] = useState(false);
   const [nameInput, , nameHelpers] = useField('name');
   const [descriptionInput, , descriptionHelpers] = useField('description');
@@ -157,7 +158,7 @@ function CreateRecipeForm() {
           _hover={{ bg: '#293e57' }}
           _active={{ bg: '#293e57' }}
           type="submit"
-          disabled={true}
+          disabled={isDisabled}
         >
           Add Recipe
         </Button>
@@ -166,7 +167,9 @@ function CreateRecipeForm() {
   );
 }
 
-export default function NewRecipe() {
+export default function NewRecipe(
+  props: InferGetServerSidePropsType<typeof getServerSideProps>
+) {
   const toast = useToast();
   const router = useRouter();
   const handleSubmit = async (values: typeof initialValues) => {
@@ -189,11 +192,9 @@ export default function NewRecipe() {
   return (
     <Sidebar>
       <Box px={10} py={8}>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={handleSubmit}
-          component={CreateRecipeForm}
-        />
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          <CreateRecipeForm isDisabled={!props.user.isAdmin} />
+        </Formik>
       </Box>
     </Sidebar>
   );
